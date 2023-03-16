@@ -1,5 +1,7 @@
 using MemBot.Action;
+using MemBot.Context;
 using MemBot.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace MemBot;
 
@@ -15,6 +17,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        
+        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
+            _configuration.GetConnectionString("Db")));
 
         services.AddSingleton<Bot>();
         services.AddSingleton<IHandleUpdateService, HandleUpdateService>();
