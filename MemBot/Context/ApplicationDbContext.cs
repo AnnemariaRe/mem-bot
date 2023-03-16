@@ -1,17 +1,19 @@
 using MemBot.Entity;
 using Microsoft.EntityFrameworkCore;
 
-namespace MemBot.Context;
-
-public class ApplicationDbContext : DbContext
+namespace MemBot.Context
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<Word> Words { get; set; }
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public class ApplicationDbContext : DbContext
     {
-    }
-    
-    public ApplicationDbContext()
-    {
+        public DbSet<User> Users { get; set; }
+        public DbSet<Word> Words { get; set; }
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public ApplicationDbContext()
+        {
+        }
     }
 }

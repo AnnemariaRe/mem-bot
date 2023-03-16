@@ -1,6 +1,6 @@
-namespace MemBot.Action;
-
-public class CallbackQueryAction : IAction
+namespace MemBot.Action
 {
-    
+    public class CallbackQueryAction : IAction
+    {
+    }
 }
