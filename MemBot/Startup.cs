@@ -1,3 +1,4 @@
+using MemBot.Action;
 using MemBot.Service;
 
 namespace MemBot;
@@ -16,7 +17,8 @@ public class Startup
         services.AddControllers();
 
         services.AddSingleton<Bot>();
-        services.AddSingleton<ICommandService, CommandService>();
+        services.AddSingleton<IHandleUpdateService, HandleUpdateService>();
+        services.AddSingleton<IAction, MessageAction>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)

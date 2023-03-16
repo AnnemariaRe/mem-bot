@@ -7,16 +7,16 @@ using Telegram.Bot.Types;
 namespace MemBot.Controller;
 
 [ApiController]
-[Route("/message")]
+[Route("/api")]
 public class BotController : ControllerBase
 {
-    public BotController(Bot bot, ICommandService commandService)
+    public BotController(Bot bot, IHandleUpdateService handleUpdateService)
     {
-        _commandService = commandService;
+        _handleUpdateService = handleUpdateService;
         _botClient = bot.GetClient().Result;
     }
 
-    private readonly ICommandService _commandService;
+    private readonly IHandleUpdateService _handleUpdateService;
     private readonly TelegramBotClient _botClient;
 
     [HttpPost]
@@ -31,7 +31,7 @@ public class BotController : ControllerBase
 
         try
         {
-            await _commandService.Execute(upd, _botClient);
+            await _handleUpdateService.Execute(upd, _botClient);
         }
         catch (Exception e)
         {
