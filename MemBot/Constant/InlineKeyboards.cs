@@ -1,30 +1,48 @@
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace MemBot.Constant;
-
-public static class InlineKeyboards
+namespace MemBot.Constant
 {
-    public static InlineKeyboardMarkup SaveAndBackInlineKeyboard = new InlineKeyboardMarkup(new[]
+    public static class InlineKeyboards
     {
-        new[] { InlineKeyboardButton.WithCallbackData("Save the word", "/save") },
-        new[] { InlineKeyboardButton.WithCallbackData("Back", "/back") }
-    });
-    
-    public static InlineKeyboardMarkup SaveAndTryAgainInlineKeyboard = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithCallbackData("Save the word", "/save") },
-        new[] { InlineKeyboardButton.WithCallbackData("Try again", "/try_again") }
-    });
-    
-    public static InlineKeyboardMarkup SaveInlineKeyboard = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithCallbackData("Save the word", "/save") },
-    });
-    
-    public static InlineKeyboardMarkup BackInlineKeyboard = new InlineKeyboardMarkup(new[]
-    {
-        new[] { InlineKeyboardButton.WithCallbackData("Back", "/back") }
-    });
-    
-    
+        public static InlineKeyboardMarkup SaveAndBackInlineKeyboard = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Save the word", CommandTypes.Save)
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Back", CommandTypes.Back)
+            }
+        });
+
+        public static InlineKeyboardMarkup SaveAndTryAgainInlineKeyboard = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Save the word", CommandTypes.Save)
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Try again", CommandTypes.TryAgain)
+            }
+        });
+
+        public static InlineKeyboardMarkup SaveInlineKeyboard = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Save the word", CommandTypes.Save)
+            },
+        });
+
+        public static InlineKeyboardMarkup BackInlineKeyboard = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Back", CommandTypes.Back)
+            }
+        });
+
+    }
 }

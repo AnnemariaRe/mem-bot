@@ -1,6 +1,6 @@
-namespace MemBot.Action;
-
-public interface IAction
+namespace MemBot.Action
 {
-    
+    public interface IAction
+    {
+    }
 }
