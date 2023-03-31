@@ -1,17 +1,12 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Telegram.Bot;
 
 namespace MemBot
 {
     public class Bot
     {
-        public Bot(IConfiguration configuration, TelegramBotClient botClient)
+        public Bot(IConfiguration configuration)
         {
             _configuration = configuration;
-            _botClient = botClient;
         }
 
         private readonly IConfiguration _configuration;

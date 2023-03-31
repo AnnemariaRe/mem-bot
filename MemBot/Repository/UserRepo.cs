@@ -15,17 +15,15 @@ public class UserRepo : IUserRepo
         _context = context;
     }
     
-    public async Task<User> CreateUser(Update update)
+    public async Task<User> CreateUser(Message message)
     {
-        var upd = update.Message ?? throw new ArgumentNullException("update.Message");
-        
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == upd.Chat.Id);
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.Chat.Id);
         if (user != null) return user;
         
         var newUser = new User
         {
-            Id = upd.Chat.Id, 
-            Username = upd.From?.Username,
+            Id = message.Chat.Id, 
+            Username = message.Chat.Username,
             Words = new List<Word>()
         };
 

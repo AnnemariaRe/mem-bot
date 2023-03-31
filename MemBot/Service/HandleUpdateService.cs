@@ -1,6 +1,4 @@
-using System.Data;
-using System.Threading.Tasks;
-using MemBot.Action;
+using MemBot.Command;
 using MemBot.Constant;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -10,40 +8,59 @@ namespace MemBot.Service
 {
     public class HandleUpdateService : IHandleUpdateService
     {
+        private readonly List<ICommand> _commands;
+        private string? _lastCommandKey;
+
+        public HandleUpdateService(IServiceProvider serviceProvider)
+        {
+            _lastCommandKey = null;
+            _commands = serviceProvider.GetServices<ICommand>().ToList();
+        }
+        
         public async Task Execute(Update? update, TelegramBotClient client)
         {
-            if (update is null)
+            var id = update.Type switch
             {
-                return;
+                UpdateType.Message => update.Message.Chat.Id,
+                UpdateType.CallbackQuery => update.CallbackQuery.Message.Chat.Id,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            switch (update)
+            {
+                case { Type: UpdateType.CallbackQuery }:
+                {
+                    if (update.CallbackQuery?.Data != null)
+                    {
+                        
+                    }
+                    break;
+                }
             }
             
-            var handler = update.Type switch
+            var messageText = update.Message?.Text;
+            var callbackQuery = update?.CallbackQuery;
+            
+            if (messageText is null && callbackQuery is null)
+                return;
+            
+            switch (messageText)
             {
-                UpdateType.Message => BotOnMessageReceived(update.Message!, client),
-                UpdateType.CallbackQuery => BotOnCallbackQueryReceived(update.CallbackQuery!, client),
-                _ => UnknownUpdateHandlerAsync(update)
-            };
-        }
-
-        private async Task BotOnMessageReceived(Message message, TelegramBotClient client)
-        {
-            switch (message.Text)
-            {
-                case CommandTypes.Start:
-                    await MessageAction.StartChat(client, message);
+                case Commands.StartCommand:
+                    await ExecuteCommand(Commands.StartCommand, id, update, client);
                     return;
-                //"/switch" => MessageAction.SwitchMegaAccount(client, message),
+            }
+            
+            switch (_lastCommandKey)
+            {
+                
             }
         }
 
-        private async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery, TelegramBotClient client)
-        {
-
-        }
-
-        private Task UnknownUpdateHandlerAsync(Update update)
-        {
-            return Task.CompletedTask;
-        }
+    private async Task ExecuteCommand(string? key, long? id, Update? update, ITelegramBotClient client)
+    {
+        _lastCommandKey = key;
+        await _commands.First(x => x.Key == key).Execute(update, client);
+    }
     }
 }

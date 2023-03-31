@@ -1,13 +1,9 @@
-using System;
-using MemBot.Action;
+using MemBot.Command;
 using MemBot.Context;
+using MemBot.Repository;
 using MemBot.Service;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Telegram.Bot.Types;
 
 namespace MemBot
 {
@@ -25,11 +21,13 @@ namespace MemBot
             services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
-                _configuration.GetConnectionString("Db")));
+                _configuration.GetConnectionString("Db")), ServiceLifetime.Singleton);
 
             services.AddSingleton<Bot>();
             services.AddSingleton<IHandleUpdateService, HandleUpdateService>();
-            services.AddSingleton<IAction, MessageAction>();
+            services.AddSingleton<IUserRepo, UserRepo>();
+            services.AddSingleton<ICommand, StartCommand>();
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
