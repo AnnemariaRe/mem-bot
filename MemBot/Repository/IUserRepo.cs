@@ -9,5 +9,7 @@ public interface IUserRepo
     public Task<User> CreateUser(Message message);
     public Task<User?> GetUser(long id);
     public Task AddWord(long id, Word? word);
+    public Task IncrementStage(Update update);
+    public Task ResetStage(Update update);
 
 }

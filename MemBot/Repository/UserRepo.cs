@@ -24,7 +24,8 @@ public class UserRepo : IUserRepo
         {
             Id = message.Chat.Id, 
             Username = message.Chat.Username,
-            Words = new List<Word>()
+            Words = new List<Word>(),
+            ConversationStage = 0
         };
 
         var result = await _context.Users.AddAsync(newUser);
@@ -46,6 +47,32 @@ public class UserRepo : IUserRepo
         {
             user.Words?.Add(word);
             await _context.SaveChangesAsync();
+        }
+    }
+    
+    public async Task IncrementStage(Update update)
+    {
+        if (update.Message?.Text != null)
+        {
+            var user = GetUser(update.Message.Chat.Id).Result;
+            if (user is not null)
+            {
+                user.ConversationStage++;
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+    
+    public async Task ResetStage(Update update)
+    {
+        if (update.Message?.Text != null)
+        {
+            var user = GetUser(update.Message.Chat.Id).Result;
+            if (user is not null)
+            {
+                user.ConversationStage = 0;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

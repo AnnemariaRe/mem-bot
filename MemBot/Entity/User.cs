@@ -7,5 +7,6 @@ namespace MemBot.Entity
         [Key] public long Id { get; set; }
         public string? Username { get; set; }
         public ICollection<Word>? Words { get; set; }
+        public int ConversationStage { get; set; }
     }
 }
