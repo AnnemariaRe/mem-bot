@@ -3,7 +3,6 @@ using MemBot.Context;
 using MemBot.Repository;
 using MemBot.Service;
 using Microsoft.EntityFrameworkCore;
-using Telegram.Bot.Types;
 
 namespace MemBot
 {
@@ -26,7 +25,10 @@ namespace MemBot
             services.AddSingleton<Bot>();
             services.AddSingleton<IHandleUpdateService, HandleUpdateService>();
             services.AddSingleton<IUserRepo, UserRepo>();
+            services.AddSingleton<IWordsApiRepo, WordsApiRepo>();
             services.AddSingleton<ICommand, StartCommand>();
+            services.AddSingleton<ICommand, AddWordCommand>();
+            services.AddSingleton<ICommand, BackCommand>();
             
         }
 

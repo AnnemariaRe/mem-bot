@@ -49,11 +49,19 @@ namespace MemBot.Service
                 case Commands.StartCommand:
                     await ExecuteCommand(Commands.StartCommand, id, update, client);
                     return;
+                case Commands.AddWordCommand:
+                    await ExecuteCommand(Commands.AddWordCommand, id, update, client);
+                    return;
+                case Commands.BackCommand:
+                    await ExecuteCommand(Commands.BackCommand, id, update, client);
+                    return;
             }
             
             switch (_lastCommandKey)
             {
-                
+                case Commands.AddWordCommand:
+                    await ExecuteCommand(Commands.AddWordCommand, id, update, client);
+                    return;
             }
         }
 

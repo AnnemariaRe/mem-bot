@@ -8,5 +8,6 @@ namespace MemBot.Entity
         public string? Username { get; set; }
         public ICollection<Word>? Words { get; set; }
         public int ConversationStage { get; set; }
+        public int LastMessageId { get; set; }
     }
 }

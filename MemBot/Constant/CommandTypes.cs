@@ -4,7 +4,7 @@ namespace MemBot.Constant
     {
         public const string Start = "/start";
         public const string Save = "/save";
-        public const string Back = "/back";
+        public const string Back = "/back_def";
         public const string TryAgain = "/try_again";
     }
 }

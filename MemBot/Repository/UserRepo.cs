@@ -50,16 +50,23 @@ public class UserRepo : IUserRepo
         }
     }
     
-    public async Task IncrementStage(Update update)
+    public async Task IncrementStage(long chatId)
     {
-        if (update.Message?.Text != null)
+        var user = GetUser(chatId).Result;
+        if (user is not null)
         {
-            var user = GetUser(update.Message.Chat.Id).Result;
-            if (user is not null)
-            {
-                user.ConversationStage++;
-                await _context.SaveChangesAsync();
-            }
+            user.ConversationStage++;
+            await _context.SaveChangesAsync();
+        }
+    }
+    
+    public async Task DecrementStage(long chatId)
+    {
+        var user = GetUser(chatId).Result;
+        if (user is not null && user.ConversationStage != 0)
+        {
+            user.ConversationStage--;
+            await _context.SaveChangesAsync();
         }
     }
     
@@ -74,5 +81,21 @@ public class UserRepo : IUserRepo
                 await _context.SaveChangesAsync();
             }
         }
+    }
+    
+    public async Task AddLastMessageId(long chatId, int id)
+    {
+        var user = GetUser(chatId).Result;
+        if (user is not null)
+        {
+            user.LastMessageId = id;
+            await _context.SaveChangesAsync();
+        }
+    }
+    
+    public int GetLastMessageId(long chatId)
+    {
+        var user = GetUser(chatId).Result;
+        return user?.LastMessageId ?? 0;
     }
 }

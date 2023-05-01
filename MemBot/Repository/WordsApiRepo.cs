@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace MemBot.Repository;
 
-public class WordsApiRepo
+public class WordsApiRepo : IWordsApiRepo
 {
     public async Task<ResponseWord?> GetWordInfo(string word)
     {
@@ -18,14 +18,15 @@ public class WordsApiRepo
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         var response = await client.GetAsync(parameters).ConfigureAwait(false);
-
-        var wordResult = new ResponseWord();
+        
         if (response.IsSuccessStatusCode)
         {
             var jsonString = await response.Content.ReadAsStringAsync();
-            wordResult = JsonConvert.DeserializeObject<ResponseWord>(jsonString);
+            return JsonConvert.DeserializeObject<ResponseWord>(jsonString);
         }
-
-        return wordResult;
+        else
+        {
+            return null;
+        }
     }
 }

@@ -9,8 +9,7 @@ public class ResponseWord
     public string Word { get; set; }
     [JsonProperty("results")]
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<ResponseResult> Results { get; set; }
+    public List<ResponseResult>? Results { get; set; }
     [JsonProperty("pronunciation")]
-    [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ResponsePronunciation Pronunciation { get; set; }
 }
