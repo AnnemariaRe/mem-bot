@@ -19,14 +19,10 @@ public class WordsApiRepo : IWordsApiRepo
 
         var response = await client.GetAsync(parameters).ConfigureAwait(false);
         
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<ResponseWord>(jsonString);
-        }
-        else
-        {
-            return null;
-        }
+        Console.Write(response.Content);
+        if (!response.IsSuccessStatusCode) return null;
+        var jsonString = await response.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<ResponseWord>(jsonString);
+
     }
 }

@@ -11,8 +11,10 @@ public interface IUserRepo
     public Task AddWord(long id, Word? word);
     public Task IncrementStage(long chatId);
     public Task DecrementStage(long chatId);
-    public Task ResetStage(Update update);
+    public Task ResetStage(long id);
     public Task AddLastMessageId(long chatId, int id);
     public int GetLastMessageId(long chatId);
+    public Word? GetUserWord(long chatId, string wordName);
+    public IEnumerable<Word>? GetUserWords(long chatId);
 
 }

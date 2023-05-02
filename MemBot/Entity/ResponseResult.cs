@@ -24,7 +24,4 @@ public class ResponseResult
     [JsonProperty("examples")]
     [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<string>? Examples { get; set; }
-    [JsonProperty("also")]
-    [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string>? Also { get; set; }
 }

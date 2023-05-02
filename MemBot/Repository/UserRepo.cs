@@ -45,6 +45,7 @@ public class UserRepo : IUserRepo
         var user = GetUser(id).Result;
         if (user is not null && word is not null)
         {
+            user.Words ??= new List<Word>();
             user.Words?.Add(word);
             await _context.SaveChangesAsync();
         }
@@ -70,16 +71,13 @@ public class UserRepo : IUserRepo
         }
     }
     
-    public async Task ResetStage(Update update)
+    public async Task ResetStage(long id)
     {
-        if (update.Message?.Text != null)
+        var user = GetUser(id).Result;
+        if (user is not null)
         {
-            var user = GetUser(update.Message.Chat.Id).Result;
-            if (user is not null)
-            {
-                user.ConversationStage = 0;
-                await _context.SaveChangesAsync();
-            }
+            user.ConversationStage = 0;
+            await _context.SaveChangesAsync();
         }
     }
     
@@ -97,5 +95,21 @@ public class UserRepo : IUserRepo
     {
         var user = GetUser(chatId).Result;
         return user?.LastMessageId ?? 0;
+    }
+    
+    public Word? GetUserWord(long chatId, string wordName)
+    {
+        var user = GetUser(chatId).Result;
+        if (user.Words != null && user.Words.Any())
+        {
+            return user.Words.FirstOrDefault(x => x.Name == wordName);
+        }
+        return null;
+    }
+    
+    public IEnumerable<Word>? GetUserWords(long chatId)
+    {
+        var user = GetUser(chatId).Result;
+        return user != null ? _context.Words.ToList().Where(word => word.User.Equals(user)).ToList() : null;
     }
 }

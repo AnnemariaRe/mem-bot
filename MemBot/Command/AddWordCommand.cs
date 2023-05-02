@@ -10,25 +10,25 @@ namespace MemBot.Command;
 
 public class AddWordCommand : ICommand
 {
-    public AddWordCommand(IUserRepo userRepo, IWordsApiRepo wordsApiRepo)
+    public AddWordCommand(IUserRepo userRepo, IWordsApiRepo wordsApiRepo, IWordRepo wordRepo)
     {
         _userRepo = userRepo;
         _wordsApiRepo = wordsApiRepo;
-        lastMessageId = 0;
+        _wordRepo = wordRepo;
         _responseWord = new ResponseWord();
     }
 
     public string Key => Commands.AddWordCommand;
     private readonly IUserRepo _userRepo;
     private readonly IWordsApiRepo _wordsApiRepo;
+    private readonly IWordRepo _wordRepo;
     private ResponseWord? _responseWord;
-    private long lastMessageId;
-    
+
     public async Task Execute(Update? update, ITelegramBotClient client)
     {
         var message = update.Type is UpdateType.CallbackQuery ? update.CallbackQuery?.Message! : update.Message!;
         var text = update.Type is UpdateType.CallbackQuery ? update.CallbackQuery?.Data : update.Message!.Text;
-        var userData = await _userRepo.GetUser(message.Chat.Id)!;
+        var userData = await _userRepo.GetUser(message.Chat.Id);
 
         var sentMessage = new Message();
         if (userData != null)
@@ -49,12 +49,13 @@ public class AddWordCommand : ICommand
 
                     if (wordInfo is { Results.Count: 1 })
                     {
-                        await client.SendTextMessageAsync(
+                        sentMessage = await client.SendTextMessageAsync(
                             chatId: message.Chat.Id,
                             text: WordInfoMessageOneDefinition(wordInfo, wordInfo.Results[0]),
                             replyMarkup: InlineKeyboards.SaveAndTryAgainInlineKeyboard,
                             parseMode: ParseMode.Html
                         );
+                        await _userRepo.AddLastMessageId(message.Chat.Id, sentMessage.MessageId);
                     }
                     else if (wordInfo?.Results is { Count: > 1 })
                     {
@@ -76,7 +77,6 @@ public class AddWordCommand : ICommand
                     }
 
                     _responseWord = wordInfo;
-                    lastMessageId = message.MessageId;
                     await _userRepo.IncrementStage(message.Chat.Id);
                     break;
 
@@ -94,6 +94,43 @@ public class AddWordCommand : ICommand
                         );
                         await _userRepo.AddLastMessageId(message.Chat.Id, sentMessage.MessageId);
                         await _userRepo.IncrementStage(message.Chat.Id);
+                    }
+
+                    if (text == CommandTypes.TryAgain)
+                    {
+                        await _userRepo.DecrementStage(message.Chat.Id);
+                        await _userRepo.DecrementStage(message.Chat.Id);
+                        var messageId = _userRepo.GetLastMessageId(message.Chat.Id);
+                        await client.DeleteMessageAsync(message.Chat.Id, messageId);
+                        
+                        goto case 0;
+                    }
+
+                    if (text == CommandTypes.Save)
+                    {
+                        if (_userRepo.GetUserWord(message.Chat.Id, _responseWord.Word) != null)
+                        {
+                            await client.DeleteMessageAsync(message.Chat.Id, _userRepo.GetLastMessageId(message.Chat.Id));
+                            await client.SendTextMessageAsync(
+                                chatId: message.Chat.Id,
+                                text: $"⚠ Word <b>{_responseWord.Word}</b> is already added.",
+                                replyMarkup: KeyboardMarkups.MainMenuKeyboardMarkup,
+                                parseMode: ParseMode.Html
+                            );
+                            await _userRepo.ResetStage(message.Chat.Id);
+                            break;
+                        }
+                        
+                        await _wordRepo.AddWord(message.Chat.Id, _responseWord!);
+                        await client.DeleteMessageAsync(message.Chat.Id, _userRepo.GetLastMessageId(message.Chat.Id));
+                        await client.SendTextMessageAsync(
+                            chatId: message.Chat.Id,
+                            text: $"✅ Word <b>{_responseWord.Word}</b> is successfully saved!",
+                            replyMarkup: KeyboardMarkups.MainMenuKeyboardMarkup,
+                            parseMode: ParseMode.Html
+                        );
+
+                        await _userRepo.ResetStage(message.Chat.Id);
                     }
                     
                     break;
@@ -121,14 +158,14 @@ public class AddWordCommand : ICommand
 
     private string WordInfoMessageOneDefinition(ResponseWord wordInfo, ResponseResult wordResult)
     {
-        var message = $"✅<b>{wordInfo.Word}</b> /{wordInfo.Pronunciation.All}/\n\n" +
+        var message = $"✅ <b>{wordInfo.Word}</b> /{wordInfo.Pronunciation.All}/\n\n" +
                       $"Definition: <i>{wordResult.Definition}</i>\n" +
                       $"Part of speech: <i>{wordResult.PartOfSpeech}</i>\n\n";
 
         if (wordResult.Examples != null)
         {
             message += $"Example with the word <b>{wordInfo.Word}</b>:\n" +
-                       $"<i>{wordResult.Examples[0]}</i>";
+                       $"\"<i>{wordResult.Examples[0]}</i>\"";
         }
         return message;
     }
@@ -159,6 +196,15 @@ public class AddWordCommand : ICommand
             {
                 buttons.Add(row);
                 row = new List<InlineKeyboardButton>();
+            }
+
+            if (i == definitionCount)
+            {
+                row = new List<InlineKeyboardButton> { InlineKeyboardButton.WithCallbackData($"Save the word", CommandTypes.Save) };
+                buttons.Add(row);
+                
+                row = new List<InlineKeyboardButton> { InlineKeyboardButton.WithCallbackData($"Try again", CommandTypes.TryAgain) };
+                buttons.Add(row);
             }
         }
         return new InlineKeyboardMarkup(buttons);

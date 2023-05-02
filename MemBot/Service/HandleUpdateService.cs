@@ -39,7 +39,7 @@ namespace MemBot.Service
             }
             
             var messageText = update.Message?.Text;
-            var callbackQuery = update?.CallbackQuery;
+            var callbackQuery = update.CallbackQuery;
             
             if (messageText is null && callbackQuery is null)
                 return;
@@ -55,12 +55,18 @@ namespace MemBot.Service
                 case Commands.BackCommand:
                     await ExecuteCommand(Commands.BackCommand, id, update, client);
                     return;
+                case Commands.ShowWordsCommand:
+                    await ExecuteCommand(Commands.ShowWordsCommand, id, update, client);
+                    return;
             }
             
             switch (_lastCommandKey)
             {
                 case Commands.AddWordCommand:
                     await ExecuteCommand(Commands.AddWordCommand, id, update, client);
+                    return;
+                case Commands.ShowWordsCommand:
+                    await ExecuteCommand(Commands.ShowWordsCommand, id, update, client);
                     return;
             }
         }

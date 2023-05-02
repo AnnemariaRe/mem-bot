@@ -26,9 +26,11 @@ namespace MemBot
             services.AddSingleton<IHandleUpdateService, HandleUpdateService>();
             services.AddSingleton<IUserRepo, UserRepo>();
             services.AddSingleton<IWordsApiRepo, WordsApiRepo>();
+            services.AddSingleton<IWordRepo, WordRepo>();
             services.AddSingleton<ICommand, StartCommand>();
             services.AddSingleton<ICommand, AddWordCommand>();
             services.AddSingleton<ICommand, BackCommand>();
+            services.AddSingleton<ICommand, ShowUserWordsCommand>();
             
         }
 

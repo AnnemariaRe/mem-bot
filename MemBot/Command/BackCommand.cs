@@ -21,7 +21,7 @@ public class BackCommand : ICommand
 
         if (userData != null)
         {
-            _userRepo.ResetStage(update);
+            _userRepo.ResetStage(message.Chat.Id);
             await client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: "Choose action ⏬",
