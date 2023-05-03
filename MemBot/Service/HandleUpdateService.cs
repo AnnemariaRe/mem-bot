@@ -58,6 +58,12 @@ namespace MemBot.Service
                 case Commands.ShowWordsCommand:
                     await ExecuteCommand(Commands.ShowWordsCommand, id, update, client);
                     return;
+                case Commands.GuessTheWordCommand:
+                    await ExecuteCommand(Commands.GuessTheWordCommand, id, update, client);
+                    return;
+                case Commands.GetRandomWordCommand:
+                    await ExecuteCommand(Commands.GetRandomWordCommand, id, update, client);
+                    return;
             }
             
             switch (_lastCommandKey)
@@ -67,6 +73,12 @@ namespace MemBot.Service
                     return;
                 case Commands.ShowWordsCommand:
                     await ExecuteCommand(Commands.ShowWordsCommand, id, update, client);
+                    return;
+                case Commands.GuessTheWordCommand:
+                    await ExecuteCommand(Commands.GuessTheWordCommand, id, update, client);
+                    return;
+                case Commands.GetRandomWordCommand:
+                    await ExecuteCommand(Commands.GetRandomWordCommand, id, update, client);
                     return;
             }
         }

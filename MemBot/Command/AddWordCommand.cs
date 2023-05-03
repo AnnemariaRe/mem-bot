@@ -234,5 +234,4 @@ public class AddWordCommand : ICommand
         }
         return new InlineKeyboardMarkup(buttons);
     }
-
 }

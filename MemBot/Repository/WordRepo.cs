@@ -51,7 +51,13 @@ public class WordRepo : IWordRepo
         return _context.Words.Find(id);
     }
     
-    public IEnumerable<WordDefinition>? GetWordDefinitions(int id)
+    public List<Word> GetUserWords(long id)
+    {
+        var user = _context.Users.Find(id);
+        return _context.Words.Where(w => w.User!.Equals(user)).ToList();
+    }
+    
+    public IEnumerable<WordDefinition> GetWordDefinitions(int id)
     {
         var word = GetWord(id);
         return _context.WordDefinitions.ToList().Where(x => x.Word == word);

@@ -31,7 +31,8 @@ namespace MemBot
             services.AddSingleton<ICommand, AddWordCommand>();
             services.AddSingleton<ICommand, BackCommand>();
             services.AddSingleton<ICommand, ShowUserWordsCommand>();
-            
+            services.AddSingleton<ICommand, GuessTheWordCommand>();
+            services.AddSingleton<ICommand, GetRandomWordCommand>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
