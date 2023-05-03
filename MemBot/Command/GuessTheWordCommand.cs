@@ -68,6 +68,7 @@ public class GuessTheWordCommand: ICommand
         }
 
         var buttons = new List<InlineKeyboardButton>();
+        var buttons2 = new List<List<InlineKeyboardButton>>();
         var correctAnswerIndex = random.Next(3);
         var message = "What word does this definition refer to?\n\n";
         for (var i = 0; i < 3; i++)
@@ -80,10 +81,12 @@ public class GuessTheWordCommand: ICommand
                 message += $"<i>{definition.Definition}</i>";
             }
             var buttonText = $"{wordsForGuess[i].Name}";
+            buttons = new List<InlineKeyboardButton>();
             buttons.Add(InlineKeyboardButton.WithCallbackData(buttonText, callbackData + $" {wordsForGuess[correctAnswerIndex].Name}"));
+            buttons2.Add(buttons);
         }
-
-        var keyboardMarkup = new InlineKeyboardMarkup(buttons.ToArray());
+        
+        var keyboardMarkup = new InlineKeyboardMarkup(buttons2.ToArray());
         var sentMessage = await client.EditMessageTextAsync(chatId, messageId,  message, replyMarkup: keyboardMarkup, parseMode: ParseMode.Html);
         await _userRepo.AddLastMessageId(chatId, sentMessage.MessageId);
     }

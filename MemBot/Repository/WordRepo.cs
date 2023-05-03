@@ -30,19 +30,29 @@ public class WordRepo : IWordRepo
             })
             .ToList();
 
-        var newWord = new Word()
+        var newWord = new Word();
+        if (responseWord.Pronunciation == null)
         {
-            Name = responseWord.Word,
-            Pronunciation = responseWord.Pronunciation.All,
-            Definitions = definitions,
-            User = await _userRepo.GetUser(id)
-        };
-        
+            newWord = new Word()
+            {
+                Name = responseWord.Word,
+                Pronunciation = null,
+                Definitions = definitions,
+                User = await _userRepo.GetUser(id)
+            };
+        }
+        else
+        {
+            newWord = new Word()
+            {
+                Name = responseWord.Word,
+                Pronunciation = responseWord.Pronunciation.All,
+                Definitions = definitions,
+                User = await _userRepo.GetUser(id)
+            };
+        }
         await _userRepo.AddWord(id, newWord);
-        
-        // _context.Words.Add(newWord);
-        // await _context.SaveChangesAsync();
-        
+
         return newWord;
     }
     

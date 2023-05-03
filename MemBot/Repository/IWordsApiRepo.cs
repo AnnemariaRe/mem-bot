@@ -5,4 +5,5 @@ namespace MemBot.Repository;
 public interface IWordsApiRepo
 {
     public Task<ResponseWord?> GetWordInfo(string word);
+    public Task<ResponseWord?> GetRandomWordInfo();
 }
