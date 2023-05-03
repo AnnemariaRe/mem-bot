@@ -7,10 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Command" />
-      <Folder Include="Controller" />
-      <Folder Include="Entity" />
-      <Folder Include="Service" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-preview.2.23128.3">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.1" />
+      <PackageReference Include="Telegram.Bot" Version="19.0.0-preview.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.EntityFrameworkCore">
+        <HintPath>..\..\..\.nuget\packages\microsoft.entityframeworkcore\8.0.0-preview.2.23128.3\lib\net6.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
