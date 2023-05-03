@@ -14,4 +14,5 @@ public class WordDefinition
     public string[]? TypeOf { get; set; }
     public string[]? PartOf { get; set; }
     public string[]? Examples { get; set; }
+    public Word? Word { get; set; }
 }

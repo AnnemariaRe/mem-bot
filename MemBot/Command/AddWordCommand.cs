@@ -162,10 +162,35 @@ public class AddWordCommand : ICommand
                       $"Definition: <i>{wordResult.Definition}</i>\n" +
                       $"Part of speech: <i>{wordResult.PartOfSpeech}</i>\n\n";
 
-        if (wordResult.Examples != null)
+        if (wordResult.Synonyms?.Count > 0)
         {
-            message += $"Example with the word <b>{wordInfo.Word}</b>:\n" +
-                       $"\"<i>{wordResult.Examples[0]}</i>\"";
+            message += "Synonyms: \n";
+            message = wordResult.Synonyms.Aggregate(message, (current, synonym) => current + $"- <i>{synonym}</i>\n");
+            message += "\n";
+        }
+        if (wordResult.Anonyms?.Count > 0)
+        {
+            message += "Antonyms: \n";
+            message = wordResult.Anonyms.Aggregate(message, (current, synonym) => current + $"- <i>{synonym}</i>\n");
+            message += "\n";
+        }
+        if (wordResult.TypeOf?.Count > 0)
+        {
+            message += "Type of: \n";
+            message = wordResult.TypeOf.Aggregate(message, (current, synonym) => current + $"- <i>{synonym}</i>\n");
+            message += "\n";
+        }
+        if (wordResult.PartOf?.Count > 0)
+        {
+            message += "Part of: \n";
+            message = wordResult.PartOf.Aggregate(message, (current, synonym) => current + $"- <i>{synonym}</i>\n");
+            message += "\n";
+        }
+        if (wordResult.Examples?.Count > 0)
+        {
+            message += "Examples: \n";
+            message = wordResult.Examples.Aggregate(message, (current, synonym) => current + $"- <i>{synonym}</i>\n");
+            message += "\n";
         }
         return message;
     }

@@ -39,9 +39,21 @@ public class WordRepo : IWordRepo
         };
         
         await _userRepo.AddWord(id, newWord);
+        
         // _context.Words.Add(newWord);
         // await _context.SaveChangesAsync();
         
         return newWord;
+    }
+    
+    public Word? GetWord(int id)
+    {
+        return _context.Words.Find(id);
+    }
+    
+    public IEnumerable<WordDefinition>? GetWordDefinitions(int id)
+    {
+        var word = GetWord(id);
+        return _context.WordDefinitions.ToList().Where(x => x.Word == word);
     }
 }

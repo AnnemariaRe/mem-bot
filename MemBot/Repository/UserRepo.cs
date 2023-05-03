@@ -46,6 +46,7 @@ public class UserRepo : IUserRepo
         if (user is not null && word is not null)
         {
             user.Words ??= new List<Word>();
+            word.User = user;
             user.Words?.Add(word);
             await _context.SaveChangesAsync();
         }

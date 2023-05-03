@@ -6,9 +6,9 @@ namespace MemBot.Constant
     {
         public static ReplyKeyboardMarkup MainMenuKeyboardMarkup = new(new[]
         {
-            new KeyboardButton[] {"Add new word"},
-            new KeyboardButton[] {"Get random word"},
-            new KeyboardButton[] {"Show my added words"},
+            new KeyboardButton[] {Commands.GuessTheWordCommand},
+            new KeyboardButton[] {Commands.AddWordCommand, Commands.GetRandomWordCommand},
+            new KeyboardButton[] {Commands.ShowWordsCommand},
         })
         {
             ResizeKeyboard = true

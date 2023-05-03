@@ -6,4 +6,6 @@ namespace MemBot.Repository;
 public interface IWordRepo
 {
     Task<Word?> AddWord(long id, ResponseWord word);
+    public Word? GetWord(int id);
+    public IEnumerable<WordDefinition>? GetWordDefinitions(int id);
 }
